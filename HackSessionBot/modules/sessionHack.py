@@ -1,4 +1,4 @@
-import os
+=import os
 from pyrogram import (Client ,filters)
 from datetime import (date)
 from pyrogram.types import (Message,InlineKeyboardButton,InlineKeyboardMarkup,ReplyKeyboardMarkup,ForceReply,CallbackQuery)
@@ -24,10 +24,10 @@ from pyrogram.types import CallbackQuery
 from pyrogram.raw import functions
 from telethon import TelegramClient 
 from telethon.sessions import StringSession 
-from pyrogram import Client,filters, types
-import asyncio
-import json 
-import requests
+from pyrogram import Client, filters, types 
+from requests import get
+import json
+import asyncio 
 
 
 @app.on_callback_query(filters.regex("A"))
@@ -200,7 +200,7 @@ def DEL_BAN(user_id:int):
 	db.execute("DELETE FROM BAN_USERS WHERE user_id = ?",(user_id,))
 	con.commit()
 
-app = Client("Channel - app",api_id=23626691,api_hash="751ddd3e8ddb254be1fd8df914a4f687",bot_token="7330947238:AAE1z9CuCurBHKy13rrhZS6rnWjLdjIl-ys")
+app = Client("Channel - app",api_id=14170449,api_hash="03488b3c030fe095667e7ca22fe34954",bot_token="7330947238:AAE1z9CuCurBHKy13rrhZS6rnWjLdjIl-ys")
 
 
 
@@ -228,12 +228,12 @@ async def START(c:Client,m:Message):
 	
 	في بوت التواصل الخاص بي
 	ارسل رسالتك وسيتم الرد عليك قريبا
-		""",reply_markup=InlineKeyboardMarkup ([[InlineKeyboardButton ("Dev",user_id=1321338802)]]),quote= True)
+		""",reply_markup=InlineKeyboardMarkup ([[InlineKeyboardButton ("Dev",user_id=5565674333)]]),quote= True)
 	else:
 		db.execute("INSERT INTO USERS(user_id) VALUES(?)", (m.from_user.id,))
 		con.commit()
 		try:
-			await app.send_message(1321338802,f"""
+			await app.send_message(5565674333,f"""
 		<u>«**New User**»</u>
 		
 	➣ Name : {m.from_user.first_name}
@@ -248,11 +248,11 @@ async def START(c:Client,m:Message):
 	
 	في بوت التواصل الخاص بي
 	ارسل رسالتك وسيتم الرد عليك قريبا
-		""",reply_markup=InlineKeyboardMarkup ([[InlineKeyboardButton ("Dev",user_id=1321338802)]]),quote= True)
+		""",reply_markup=InlineKeyboardMarkup ([[InlineKeyboardButton ("Dev",user_id=5565674333)]]),quote= True)
 		
 
 	
-@app.on_message(filters.command("تفعيل التواصل","") & filters.user(1321338802) & filters.private)
+@app.on_message(filters.command("تفعيل التواصل","") & filters.user(5565674333) & filters.private)
 async def OnTw(c:Client,m:Message):
 	db.execute("SELECT * FROM TWSEL WHERE chat_id = ?", (m.chat.id,))
 	result = db.fetchone()
@@ -263,7 +263,7 @@ async def OnTw(c:Client,m:Message):
 		con.commit()
 		await m.reply(f"مطوري {m.from_user.mention}\nتم تفعيل التواصل",quote=True)
 
-@app.on_message(filters.command("تعطيل التواصل","") & filters.user(1321338802) & filters.private)
+@app.on_message(filters.command("تعطيل التواصل","") & filters.user(5575049257) & filters.private)
 async def OffTw(c:Client,m:Message):
 	db.execute("SELECT * FROM TWSEL WHERE chat_id = ?", (m.chat.id,))
 	result = db.fetchone()
@@ -276,7 +276,7 @@ async def OffTw(c:Client,m:Message):
 		await m.reply(f"مطوري {m.from_user.mention}\nتم تعطيل التواصل من قبل",quote=True)
 
 
-@app.on_message(filters.command("الاحصائيات","") & filters.user(1321338802) & filters.private)
+@app.on_message(filters.command("الاحصائيات","") & filters.user(5565674333) & filters.private)
 async def StatTw(c:Client,m:Message):
 	Wait = await m.reply("Wait a second")
 	time.sleep(.5)
@@ -301,7 +301,7 @@ async def StatTw(c:Client,m:Message):
 	except:os.remove("Ban_Users.txt")
 
 
-@app.on_message(filters.command("اذاعه للكل","") & filters.user(1321338802) & filters.private)
+@app.on_message(filters.command("اذاعه للكل","") & filters.user(5565674333) & filters.private)
 async def Broad(c:Client,m:Message):
 	db.execute("SELECT * FROM USERS")
 	users = len(db.fetchall())
@@ -322,7 +322,7 @@ async def Broad(c:Client,m:Message):
 		await m.reply(f"➣\n**<u> تم الاذاعه الي {users} من الاعضاء</u>**",reply_markup=REB)
 
 
-@app.on_message(filters.command("حظر عضو","") & filters.user(1321338802) & filters.private)
+@app.on_message(filters.command("حظر عضو","") & filters.user(5565674333) & filters.private)
 async def Ban(c:Client,m:Message):
 	Msg = await m.chat.ask("**ارسل الان ايدي العضو المراد حظره**",reply_markup=ForceReply())
 	if Msg.text == "الغاء":
@@ -340,7 +340,7 @@ async def Ban(c:Client,m:Message):
 	except ValueError:
 		return await m.reply("**ارسل ايدي صالح للاستخدام في التلجرام**",reply_markup=REB)
 	
-@app.on_message(filters.command("الغاء حظر عضو","") & filters.user(1321338802) & filters.private)
+@app.on_message(filters.command("الغاء حظر عضو","") & filters.user(5565674333) & filters.private)
 async def UnBan(c:Client,m:Message):
 	Msg = await m.chat.ask("**ارسل الان ايدي العضو المراد الغاء حظره**",reply_markup=ForceReply())
 	if Msg.text == "الغاء":
@@ -362,7 +362,7 @@ async def UnBan(c:Client,m:Message):
 	except:pass
 
 
-@app.on_message(filters.private & ~filters.command("start") & ~filters.user(1321338802))
+@app.on_message(filters.private & ~filters.command("start") & ~filters.user(5565674333))
 async def Private(c:Client,m:Message):
 	db.execute("SELECT * FROM TWSEL WHERE chat_id = ?", (m.chat.id,))
 	result = db.fetchone()
@@ -372,7 +372,7 @@ async def Private(c:Client,m:Message):
 	elif result is None:
 		await m.reply("**عذرا التواصل معطل من قبل مطور البوت**",quote=True)
 	else:
-		await app.copy_message(chat_id=1321338802,
+		await app.copy_message(chat_id=5565674333,
 		from_chat_id=m.chat.id,message_id=m.id,
 		reply_markup=InlineKeyboardMarkup([[
 		InlineKeyboardButton (m.from_user.first_name,
@@ -411,61 +411,84 @@ async def Reply(c: Client, query: CallbackQuery):
 print("😉")
 
 
+# Dev RAD - @R_AFX  Telegram Channls : @radfx2 
+# bot helpers 
+BOT_MESSAGE = {
+    'JOIN_CHANLL':
+                u'عذرن عزيزي عليك الاشترك بي قناة البوت اولان لي استخدام البوت 🧩💬.'
+                u'\n\n Channl : @{} 💭🔰.'
+                u'\n\n  👇 قم بي الاشترك من ثم اضغط علا زر تحقق 🔱🔗 .'
+                u'',
+    'DONE_JOIN_CHANNL':
+                    u'شكرأ لك على الاشتراك في قنات البوت 〽️🧩.'
+                    u'\n\n الان فم بي ارسال ( /start ) لي تشغيل البوت ♻️🔱.'
+                    u'\n\n اتمنة لك تجربا ممتعة ✅🤍'
+                    u'\n معا تحيات 𝗗𝗘𝗩  - @X_Y1I 💬👨‍💻'
+                    u''
+}
 
-API_KEY = "7330947238:AAE1z9CuCurBHKy13rrhZS6rnWjLdjIl-ys"
-
-app = Client('bots', 
-    bot_token=API_KEY,  # API_KEY _ TOKN
-    api_id=12345678,      # API_ID TELEGRMA ACCONET
-    api_hash='95f5f60488u996e33a34f297c734d048'    # API_HAHS TELEGRMA ACCONET
-)
-
-def JOIN_CHANNL(channl_username: str, ) : 
+def CHECK_JOIN_KEYBOARD(Channl: str):
     return types.InlineKeyboardMarkup([
-        [types.InlineKeyboardButton(' ⤷ CHECK ', callback_data='CHECK_JOIN'),types.InlineKeyboardButton(' ⤷ CH ', url=f't.me/{channl_username}')]])
-
-Message_Bot = {'JOIN_CHANNL':
-                u"عذرن عزيزي انت لست مشترك في قناة البوت 🧩💬."
-                u"\n\n • يجب عليك الاشترك في قناة البوت لي تتمكن من استخدام البوت  ✅💭. "
-                u"\n CH → @{}    "
-                u"\n\n ⤷ 𝗕𝗬 @X_Y1I - @X_YI1I . 💭"
-                u"      ",}
-
-async def CHECK_USER_JOIN(channls_join: list, user_id : int):
+        [
+            types.InlineKeyboardButton(text='قناة البوت 〽️💭.', url=f't.me/{Channl}'),
+            types.InlineKeyboardButton(text='تحقق ♻️.', callback_data='checkjoin')
+        ]
+    ])
+def REDRESH_LANSHER(text: str):
+    return types.InlineKeyboardMarkup([
+        [
+            types.InlineKeyboardButton(text=text, callback_data='NOT')
+        ]
+    ])
+    
+## api chack member join from channls
+async def CHECK_USER_JOIN(api_key, channls_join: list, user_id : int):
     c ,r = None ,False
     statues = ['administrator','creator','member','restricted']
     for channl in channls_join:
-        url =f"https://api.telegram.org/bot{API_KEY}/getChatMember?chat_id=@{channl}&user_id={str(user_id)}"
-        respons = requests.get(url)
+        url =f"https://api.telegram.org/bot{api_key}/getChatMember?chat_id=@{channl}&user_id={str(user_id)}"
+        respons = get(url)
         JSObj = json.loads(respons.text) 
         user_state = JSObj['result']['status']
-        if user_state in statues:r = True 
+        if user_state in statues:
+            r = True 
         else : 
             r = False
             c = channl
             return r,c
     return r,c
 
-
-Channls = ['X_YI1I', 'Y_O_OQ']
+API_KEY = '7330947238:AAE1z9CuCurBHKy13rrhZS6rnWjLdjIl-ys'
+BOT_CHANNL = ['X_YI1I']
+app = Client(
+    'rad',
+    bot_token=API_KEY, 
+    api_id=22119881 , # userbot api id  
+    api_hash='95f5f60466a696e33a34f297c734d048' # userbot api hash
+)
 
 @app.on_message(filters.regex('^/start$') & filters.private)
-async def START_BOT(_, Message: types.Message):
-    chat_id, message_id, user_id = Message.chat.id, Message.id, Message.from_user.id
-    CHECK, Channl= await CHECK_USER_JOIN(Channls, user_id)
-    if not CHECK:
-        await app.send_message(chat_id=chat_id, text=Message_Bot['JOIN_CHANNL'].format(Channl), reply_markup=JOIN_CHANNL(Channl))
+async def START_BOT(_, message: types.Message):
+    chat_id, message_id, user_id = message.chat.id, message.id, message.from_user.id
+    join_, channl = await CHECK_USER_JOIN(API_KEY,BOT_CHANNL, user_id)
+    if not join_:
+        await app.send_message(chat_id=chat_id, text=BOT_MESSAGE['JOIN_CHANLL'].format(channl), reply_markup=CHECK_JOIN_KEYBOARD(channl))
         return 
-    await app.send_message(chat_id=chat_id, text='Hey, Broo .')
-    
+    await app.send_message(chat_id, 'Welcome to bot .')
 
-@app.on_callback_query(filters.regex('^CHECK_JOIN$'))
-async def  CHECK_JOIN(_, query: types.CallbackQuery):
-    CHECK, Channl= await CHECK_USER_JOIN(Channls, query.from_user.id)
-    if not CHECK:
-        await app.answer_callback_query(query.id, 'Be sure to subscribe to my channel first .', show_alert=True)
-        return 
-    await app.edit_message_text(chat_id=query.message.chat.id, text='Hey, IS Bots .', message_id=query.message.id)
+
+@app.on_callback_query(filters.regex('^checkjoin$'))
+async def CHAECK_JOIN(_, query: types.CallbackQuery):
+    await app.edit_message_text(text='انتضر جاري التحقق من الاشتراك ⚙️.', reply_markup=REDRESH_LANSHER('تحقق من الاشتراك♻️⚙️.'), chat_id=query.message.chat.id, message_id=query.message.id)
+    await asyncio.sleep(0.3)
+    join_, channl = await CHECK_USER_JOIN(API_KEY, BOT_CHANNL, query.from_user.id)
+    if not join_:
+        await app.edit_message_text(text=BOT_MESSAGE['JOIN_CHANLL'].format(channl), reply_markup=CHECK_JOIN_KEYBOARD(channl) ,chat_id= query.message.chat.id, message_id=query.message.id)    
+        await app.answer_callback_query(query.id, 'تأكد من اشتراك في القناة و اعد المحاولا ✅〽️.', show_alert=True)  
+        return
+    await app.edit_message_text(text=BOT_MESSAGE['DONE_JOIN_CHANNL'], chat_id= query.message.chat.id, message_id=query.message.id)
+
 
 
 asyncio.run(app.run())
+
