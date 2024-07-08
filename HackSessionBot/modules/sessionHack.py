@@ -24,9 +24,10 @@ from pyrogram.types import CallbackQuery
 from pyrogram.raw import functions
 from telethon import TelegramClient 
 from telethon.sessions import StringSession 
-from kvsqlite.sync import Client
-import telebot 
-from telebot.types import InlineKeyboardButton as but , InlineKeyboardMarkup as key
+from pyrogram import Client,filters, types
+import asyncio
+import json 
+import requests
 
 
 @app.on_callback_query(filters.regex("A"))
@@ -154,241 +155,317 @@ async def l_callback(client : Client, query : CallbackQuery):
             disable_web_page_preview=True)
 
 
-db = Client('Sq.sqlite')
-onwer = int('1321338802')
-if not db.get('db'):
-    data = {'onwer':[],'admin': [], 'users': [] , 'band':[], 'status': 1}
-    db.set('db',data)
-if not onwer in db.get('db')['onwer']:
-    data = db.get('db')
-    data['onwer'].append(onwer)
-    db.set('db',data)
-bot = telebot.TeleBot('7330947238:AAE1z9CuCurBHKy13rrhZS6rnWjLdjIl-ys') #token
-@bot.message_handler(commands = ['start'])
-def staty(m):
- status = db.get("status")
- channel = db.get("channel")
- userg = len(db.get('db')['users'])
- for i in db.get('db')['onwer']:
-     pass
- print(channel)
- data = db.get('db')
- user_id = m.from_user.id
- if user_id in data['band']:
-     bot.send_message(m.chat.id,'تم حظرك من البوت ')
- if data['status'] == 2:
-     pass
- else:
-     if not user_id in data['users']:
-         data = db.get('db')
-         data['users'].append(user_id)
-         db.set('db',data)
-         sug = len(db.get("db")["users"])
-         text = f' مرحبا بك في البوت\n\nID : {user_id}\nNAME : {m.from_user.first_name}\nUSER : {m.from_user.username}\n\nعدد الاعضاء :{sug}'
-         if len(db.get("db")['admin']) > 0:
-             for x in data['admin']:
-                 print(x)
-                 bot.send_message(int(x),text)
-             bot.send_message(int(i),text)
-         bot.send_message(int(i),text)
- if not db.get('channel'):
-     if user_id in data['onwer'] or user_id in data['admin']:
-         bot.send_message(m.chat.id,'لاتوجد قناة يجب عليك وضع قناة')
- else:
-     if not db.get('status'):
-         pass
-     if db.get('status'):
-         member = bot.get_chat_member(f"@{channel}",m.from_user.id)
-         if member.status == "member" or member.status == "administartor" or member.status == "creator":
-             pass
-         else:
-             bot.send_message(m.chat.id,f'https://t.me/{channel}')
- v= key()	
- add_adm = but('اضافة ادمن',callback_data = 'add')	
- delete_adm = but('تنزيل ادمن', callback_data = 'delet')
- rem = but('احصائيات',callback_data = 'statc')
- ban = but('حظر عضو',callback_data = 'banme')
- bun = but('الغاء حظر عضو',callback_data = 'baning')
- brod = but('اذاعة',callback_data = 'brod')
- ba = but(f'وضع قناة الاشتراك',callback_data = 'geti')
- bn =but('فتح الاشتراك الاجباري',callback_data = 'ope')
- tnb = but('فتح التنبيه ',callback_data = 'tnb')
- clo = but('تعطيل التنبيه',callback_data = 'clo')
- jio = but('حالة الاشتراك الاجباري',callback_data = 'ses')
- best = but('تعطيل الاشتراك الاجباري',callback_data = 'gohn')
- dest = but(f'حذف قناة الاشتراك',callback_data = 'gets')
- est = but(f'قناة الاشتراك',callback_data = 'gs')
- kop = but("حاله التنبيه ",callback_data = "kop")
- v.add(add_adm,delete_adm)
- v.add(brod)
- v.add(ba,dest)
- v.add(est)
- v.add(tnb,clo)
- v.add(jio)
- v.add(bn,best)
- v.add(rem)
- v.add(bun,ban)
- v.add(kop)
- h = key()
- rem = but('احصائيات',callback_data = 'statc')
- brod = but('اذاعة',callback_data = 'brod')
- h.add(ba,dest)
- h.add(est)
- h.add(tnb,clo)
- h.add(jio)
- h.add(bn,best)
- h.add(rem,brod)
- h.add(kop)
- if user_id in data['onwer'] :
-     bot.send_message(m.chat.id,'مرحبا بك في البوت',reply_markup = v)
- if user_id in data['band']:
-     pass
- else:
-     if user_id in data['admin']:
-         bot.send_message(m.chat.id,'مرحبا بك في البوت',reply_markup = h)
-@bot.callback_query_handler(func=lambda c: True)
-def handle_callback(c):
-    channel = db.get("channel")
-    user_id = c.from_user.id
-    data = db.get('db')
-    use = len(db.get('db')['users'])
-    adm = len(db.get('db')['admin'])
-    bans = len(db.get('db')['band'])
-    dg = f'''
-band  : {bans}
-member : {use} 
-admin : {adm} 
-          '''
-    if c.data == 'add': 
-        if user_id in data['onwer']:
-            m = bot.send_message(c.message.chat.id,'ارسل ايدي الشخص لرفع ادمن')
-            bot.register_next_step_handler(m,adds)
-    if c.data == 'delet': 
-        if user_id in data['onwer']:
-            ha = bot.send_message(c.message.chat.id,'ارسل ايدي الشخص الذي تريد تنزيل من الادمن')
-            bot.register_next_step_handler(ha,dgh)
-    if c.data == 'banme': 
-        if user_id in data['onwer']:
-            lita = bot.send_message(c.message.chat.id,'ارسل ايدي الشخص الذي تريد حظره')
-            bot.register_next_step_handler(lita,hhg)
-    if c.data == 'baning' : 
-        if user_id in data['onwer']:
-            li = bot.send_message(c.message.chat.id,'ارسل ايدي الشخص الذي تريد فك الحظر عنه ')
-            bot.register_next_step_handler(li,hgf)
-    if c.data == 'statc' : 
-        if user_id in data['onwer'] or user_id in data['admin']:
-            bot.send_message(c.message.chat.id,dg)
-    if c.data == 'brod':
-        if user_id in data['onwer'] or user_id in data['admin']:
-            xc = bot.send_message(c.message.chat.id,'ارسل الشي الذي تريد ارساله (نص ,صوره ، ملصق ، ملف )')
-            bot.register_next_step_handler(xc,cx)
-    if c.data == 'geti':
-        if user_id in data['onwer'] or user_id in data['admin']:
-            fiul = bot.send_message(c.message.chat.id,'ارسل يوزر القناة بدون @')
-            bot.register_next_step_handler(fiul,setz)
-    if c.data == 'gs':
-        if user_id in data['onwer'] or user_id in data['admin']:
-            if not db.get('channel'):
-                bot.send_message(c.message.chat.id,'لم يتم تحديد قناة')
-            else:
-                channel = db.get('channel')
-                bot.send_message(c.message.chat.id,f'https://t.me/{channel}')
-    if c.data == 'gets':
-        if user_id in data['onwer'] or user_id in data['admin']:
-            if db.get('channel'):
-                db.delete('channel')
-                bot.send_message(c.message.chat.id,'تم حذف القناة')
-            else:
-                bot.send_message(c.message.chat.id,'لا توجد قناة مضافه')
-    if c.data == 'ope':
-        if user_id in data['onwer'] or user_id in data['admin']:
-            if not db.get('status'):
-                db.set('status',1)
-                bot.send_message(c.message.chat.id,'تم تفعيل الاشتراك الاجباري')
-            else:
-                bot.send_message(c.message.chat.id,'الاشتراك مغعل من قبل')
-    if c.data == "gohn":
-        if user_id in data['onwer'] or user_id in data['admin']:
-            if db.get('status'):
-                db.delete('status')
-                bot.send_message(c.message.chat.id,'تم تعطيل الاشتراك')
-            else:
-                bot.send_message(c.message.chat.id,'الاشتراك معطل من قبل')
-    if c.data == "ses":
-        if user_id in data['onwer'] or user_id in data['admin']:
-            if db.get('status'):
-                bot.answer_callback_query(c.id,"الاشتراك الاجباري مفعل",show_alert=True)
-            elif not db.get("status"):
-                bot.answer_callback_query(c.id,"الاشتراك الاجباري معطل",show_alert=True)
-    if c.data == "tnb":
-        if user_id in data['onwer'] or user_id in data['admin']:
-            if db.get('db')['status'] == 1:
-                bot.send_message(c.message.chat.id,"التنبيه مفتوح من قبل")
-            else:
-                data["status"] = 1
-                db.set("db",data)
-                bot.send_message(c.message.chat.id,"تم فتح التنبيه")
-    if c.data == "clo":
-        if user_id in data['onwer'] or user_id in data['admin']:
-            if data["status"] == 2:
-                bot.send_message(c.message.chat.id,"التنبيه معطل من قبل ")
-            else:
-                data["status"] = 2
-                db.set("db",data)
-                bot.send_message(c.message.chat.id,"تم تعطيل التنبيه ")
-    if c.data == "kop":
-        if user_id in data['onwer'] or user_id in data['admin']:
-            if data["status"] == 2 :
-                bot.answer_callback_query(c.id,"التنبيه معطل",show_alert=True)
-            else:
-                bot.answer_callback_query(c.id,"التنبيه مفتوح",show_alert=True)
-def setz(message):
-    chn = message.text
-    if not db.get('channel'):
-        db.delete('channel')
-        db.set('channel',chn)
-        bot.send_message(message.chat.id,'تم تحديد القناة')
-    else:
-        bot.send_message(message.chat.id,"يوجد قناة اخري يرجى حذفها لوضع قناة ثانيه")
-def cx(message):
-    ko = db.get('db')['users']
-    for i in ko:
-        bot.copy_message(chat_id=i, from_chat_id=message.chat.id, message_id=message.message_id)
-def hgf(message):
-    data = db.get('db')
-    idg = int(message.text)
-    if idg in data['band']:
-        data['band'].remove(int(f'{idg}'))
-        db.set('db',data)
-        bot.send_message(message.chat.id,'تم فك الحظر')
-    else:
-        bot.send_message(message.chat.id,'لم يتم حظر هاذ شخص')
-def hhg(message):
-    data = db.get('db')
-    ids = int(message.text)
-    if not ids in data['band']:
-        data['band'].append(int(f'{ids}'))
-        db.set('db',data)
-        bot.send_message(message.chat.id,'تم حظره')
-    else:
-        bot.send_message(message.chat.id,'لا يوجد تم حظره يهاذ الايدي')
-def dgh(message):
-    data = db.get('db')
-    idd = int(message.text)
-    if idd in data['admin']:
-        data['admin'].remove(idd)
-        db.set('db',data)
-        bot.send_message(message.chat.id,'تم تنزيل من الادمن')
-    else:
-        bot.send_message(message.chat.id,'ليس مرفوع في قائمه الادمن ')
-def adds(message):
-    data = db.get('db')
-    id = int(message.text)
-    if id in data['admin']:
-        bot.send_message(message.chat.id,'مرفوع من قبل')
-    else:
-        data['admin'].append(int(f'{id}'))
-        db.set('db',data)
-        print(data)
-        bot.send_message(message.chat.id,'تم رفع ادمن')
-bot.polling(True)
+con = sqlite3.connect(database="app.db",check_same_thread=False)
+db = con.cursor()
+
+db.execute('''CREATE TABLE IF NOT EXISTS TWSEL (chat_id INTEGER PRIMARY KEY)''')
+db.execute('''CREATE TABLE IF NOT EXISTS USERS (user_id INTEGER PRIMARY KEY)''')
+db.execute('''CREATE TABLE IF NOT EXISTS BAN_USERS (user_id INTEGER PRIMARY KEY)''')
+con.commit()
+
+
+def GET_USERS() -> str:
+	USERS = []
+	try:
+		db.execute("SELECT * FROM USERS")
+		for USER in db.fetchall():
+			USERS.append(USER[0])
+		return USERS
+	except:
+		return []
+
+def GET_BAN_USERS() -> str:
+	BAN_USERS = []
+	try:
+		db.execute("SELECT * FROM BAN_USERS")
+		for USER in db.fetchall():
+			BAN_USERS.append(USER[0])
+		return BAN_USERS
+	except:
+		return []
+
+def CHECK_BAND(user_id:int) -> str:
+	db.execute("SELECT user_id FROM BAN_USERS WHERE user_id = ?",(user_id,))
+	return bool(db.fetchall())
+
+def ADD_BAN(user_id:int):
+	if CHECK_BAND(user_id=user_id):
+		return
+	db.execute("INSERT INTO BAN_USERS(user_id) VALUES(?)",(user_id,))
+	con.commit()
+
+def DEL_BAN(user_id:int):
+	if not CHECK_BAND(user_id=user_id):
+		return
+	db.execute("DELETE FROM BAN_USERS WHERE user_id = ?",(user_id,))
+	con.commit()
+
+app = Client("Channel - app",api_id=23626691,api_hash="751ddd3e8ddb254be1fd8df914a4f687",bot_token="7330947238:AAE1z9CuCurBHKy13rrhZS6rnWjLdjIl-ys")
+
+
+
+REB = ReplyKeyboardMarkup([
+	[("تفعيل التواصل"),("تعطيل التواصل")],
+	[("الاحصائيات"),("اذاعه للكل")],
+	[("الغاء حظر عضو"),("حظر عضو")],
+	[("الغاء")]],
+	resize_keyboard=True)
+
+@app.on_message(filters.command("hsoo") & filters.private)
+async def START(c:Client,m:Message):
+	UserName = m.from_user.username
+	UserName = "@"+UserName if UserName else "There in no username"
+	db.execute("SELECT * FROM USERS WHERE user_id = ?", (m.from_user.id,))
+	result = db.fetchone()
+	
+	if m.from_user.id == 1321338802:
+		await m.reply("اليك لوحه المطور",reply_markup=REB,quote=True)
+	elif CHECK_BAND(user_id=m.from_user.id):
+		await m.reply("**تم حظرك من استخدام البوت**",quote=True)
+	elif result:
+		await m.reply(f"""
+		مرحبا {m.from_user.mention}
+	
+	في بوت التواصل الخاص بي
+	ارسل رسالتك وسيتم الرد عليك قريبا
+		""",reply_markup=InlineKeyboardMarkup ([[InlineKeyboardButton ("Dev",user_id=1321338802)]]),quote= True)
+	else:
+		db.execute("INSERT INTO USERS(user_id) VALUES(?)", (m.from_user.id,))
+		con.commit()
+		try:
+			await app.send_message(1321338802,f"""
+		<u>«**New User**»</u>
+		
+	➣ Name : {m.from_user.first_name}
+	➣ User Name : {UserName}
+	➣ User Id : `{m.from_user.id}`
+	➣ Link : [Link Profile](tg://user?id=m.from.user.id)
+	➣ Data : **{date.today()}**
+		""",reply_markup=InlineKeyboardMarkup ([[InlineKeyboardButton (m.from_user.first_name,user_id=m.from_user.id)],[InlineKeyboardButton("حظر هذا العضو",callback_data=f"Ban:{m.from_user.id}")]]))
+		except:pass
+		await m.reply(f"""
+		مرحبا {m.from_user.mention}
+	
+	في بوت التواصل الخاص بي
+	ارسل رسالتك وسيتم الرد عليك قريبا
+		""",reply_markup=InlineKeyboardMarkup ([[InlineKeyboardButton ("Dev",user_id=1321338802)]]),quote= True)
+		
+
+	
+@app.on_message(filters.command("تفعيل التواصل","") & filters.user(1321338802) & filters.private)
+async def OnTw(c:Client,m:Message):
+	db.execute("SELECT * FROM TWSEL WHERE chat_id = ?", (m.chat.id,))
+	result = db.fetchone()
+	if result:
+		await m.reply(f"مطوري {m.from_user.mention}\nتم تفعيل التواصل من قبل",quote=True)
+	else:
+		db.execute("INSERT INTO TWSEL(chat_id) VALUES(?)", (m.chat.id,))
+		con.commit()
+		await m.reply(f"مطوري {m.from_user.mention}\nتم تفعيل التواصل",quote=True)
+
+@app.on_message(filters.command("تعطيل التواصل","") & filters.user(1321338802) & filters.private)
+async def OffTw(c:Client,m:Message):
+	db.execute("SELECT * FROM TWSEL WHERE chat_id = ?", (m.chat.id,))
+	result = db.fetchone()
+	
+	if result is not None:
+		db.execute("DELETE FROM TWSEL WHERE chat_id = ?", (m.chat.id,))
+		con.commit()
+		await m.reply(f"مطوري {m.from_user.mention}\nتم تعطيل التواصل",quote=True)
+	else:
+		await m.reply(f"مطوري {m.from_user.mention}\nتم تعطيل التواصل من قبل",quote=True)
+
+
+@app.on_message(filters.command("الاحصائيات","") & filters.user(1321338802) & filters.private)
+async def StatTw(c:Client,m:Message):
+	Wait = await m.reply("Wait a second")
+	time.sleep(.5)
+	Users = GET_USERS()
+	with open("Users.txt","w") as file:
+		for User in Users:
+			file.write(str(User)+"\n")
+	READ = open("Users.txt","rb")
+	Users = GET_BAN_USERS()
+	with open("Ban_Users.txt","w") as file:
+		for User in Users:
+			file.write(str(User)+"\n")
+	READ2 = open("Ban_Users.txt","rb")
+	await Wait.delete()
+	try:	
+		await m.reply_document(READ,caption="**<u>➣ User Stats  </u>**")
+		os.remove("Users.txt")
+	except:os.remove("Users.txt")
+	try:	
+		await m.reply_document(READ2,caption="**<u>➣ Ban User Stats  </u>**")
+		os.remove("Ban_Users.txt")
+	except:os.remove("Ban_Users.txt")
+
+
+@app.on_message(filters.command("اذاعه للكل","") & filters.user(1321338802) & filters.private)
+async def Broad(c:Client,m:Message):
+	db.execute("SELECT * FROM USERS")
+	users = len(db.fetchall())
+	con.commit()
+	if users < 1:
+		await m.reply("➣**<u>لا يوجد مستخدمين ليتم الاذاعه لهم</u>**")
+	else:
+		Msg = await m.chat.ask("**ارسل الان نص الاذاعه**\nللالغاء ارسل `الغاء` اضغط للنسخ",
+		reply_markup=ForceReply())
+		if Msg.text == "الغاء":
+			return await m.reply("**تم الغاء الاذاعه**",reply_markup=REB)
+		REP = await m.reply("**انتظر يتم الاذاعه الان**")
+		for user in GET_USERS():
+			try:
+				await Msg.copy(int(user))
+			except:pass
+		await REP.delete()
+		await m.reply(f"➣\n**<u> تم الاذاعه الي {users} من الاعضاء</u>**",reply_markup=REB)
+
+
+@app.on_message(filters.command("حظر عضو","") & filters.user(1321338802) & filters.private)
+async def Ban(c:Client,m:Message):
+	Msg = await m.chat.ask("**ارسل الان ايدي العضو المراد حظره**",reply_markup=ForceReply())
+	if Msg.text == "الغاء":
+		return await m.reply("**تم الغاء الامر**",reply_markup=REB)
+	if Msg.text == m.from_user.id:
+		return await m.reply("**لا يمكنك حظر نفسك**")
+	try:
+		if CHECK_BAND(user_id=Msg.text):
+			return await m.reply("**هذا المستخدم محظور من قبل**",reply_markup=REB)
+	except ValueError:
+		return await m.reply("**ارسل ايدي صالح للاستخدام في التلجرام**",reply_markup=REB)
+	try:
+		ADD_BAN(user_id=int(Msg.text))
+		return await m.reply(f"**تم حظر {Msg.text} من البوت",reply_markup=REB)
+	except ValueError:
+		return await m.reply("**ارسل ايدي صالح للاستخدام في التلجرام**",reply_markup=REB)
+	
+@app.on_message(filters.command("الغاء حظر عضو","") & filters.user(1321338802) & filters.private)
+async def UnBan(c:Client,m:Message):
+	Msg = await m.chat.ask("**ارسل الان ايدي العضو المراد الغاء حظره**",reply_markup=ForceReply())
+	if Msg.text == "الغاء":
+		return await m.reply("**تم الغاء الامر**",reply_markup=REB)
+	if Msg.text == m.from_user.id:
+		return await m.reply("**لا يمكنك الغاء حظر نفسك**")
+	try:
+		if not CHECK_BAND(user_id=Msg.text):
+			return await m.reply("**هذا المستخدم لم يتم حظره من قبل**",reply_markup=REB)
+	except ValueError:
+		return await m.reply("**ارسل ايدي صالح للاستخدام في التلجرام**",reply_markup=REB)
+	try:
+		DEL_BAN(user_id=int(Msg.text))
+		return await m.reply(f"**تم الغاء حظر {Msg.text} من البوت",reply_markup=REB)
+	except ValueError:
+		return await m.reply("**ارسل ايدي صالح للاستخدام في التلجرام**",reply_markup=REB)
+	try:
+		await app.send_message(Msg.text,f"**مرحبا {Msg.text} تم الغاء حظرك من البوت بنجاح")
+	except:pass
+
+
+@app.on_message(filters.private & ~filters.command("start") & ~filters.user(1321338802))
+async def Private(c:Client,m:Message):
+	db.execute("SELECT * FROM TWSEL WHERE chat_id = ?", (m.chat.id,))
+	result = db.fetchone()
+	
+	if CHECK_BAND(user_id=m.from_user.id):
+		await m.reply("**تم حظرك من استخدام البوت**",quote=True)
+	elif result is None:
+		await m.reply("**عذرا التواصل معطل من قبل مطور البوت**",quote=True)
+	else:
+		await app.copy_message(chat_id=1321338802,
+		from_chat_id=m.chat.id,message_id=m.id,
+		reply_markup=InlineKeyboardMarkup([[
+		InlineKeyboardButton (m.from_user.first_name,
+		user_id=m.from_user.id)],[
+		InlineKeyboardButton("الرد علي العضو",
+		callback_data=f"Reply:{m.from_user.id}")],[
+		InlineKeyboardButton("حظر هذا العضو",
+		callback_data=f"Ban:{m.from_user.id}")]
+		]))
+		await m.reply("**تم استلام رسالتك انتظر الرد**",quote=True)
+
+@app.on_callback_query(filters.regex(f"Ban:") & ~filters.regex(f"Reply:"))
+async def BanInli(c: Client, query: CallbackQuery):
+	ID = int(query.data.split(":")[1])
+	KEY = InlineKeyboardMarkup([[
+	InlineKeyboardButton ("الدخول للعضو المحظور",user_id=ID)]])
+	ADD_BAN(user_id=ID)
+	try:
+		await query.message.edit_text(f"**تم حظر `{ID}` من البوت**",reply_markup=KEY)
+	except:pass
+
+@app.on_callback_query(~filters.regex(f"Ban:") & filters.regex(f"Reply:"))
+async def Reply(c: Client, query: CallbackQuery):
+	ID = int(query.data.split(":")[1])
+	
+	a = await query.message.chat.ask("** ارسل الان مضون الرساله لارسلها للشخص**")
+	
+	try:
+		await app.send_message(chat_id=ID, text=str(a.text))
+		await query.message.reply("**تم ارسال رسالتك**",quote=True)
+	except Exception as e:
+			await query.message.reply("**يسمح فقط بارسال نص فقط ولا يمسح باي شي ثاني\n\nError:**\n"+str(e))
+	
+			
+
+print("😉")
+
+
+
+API_KEY = "7330947238:AAE1z9CuCurBHKy13rrhZS6rnWjLdjIl-ys"
+
+app = Client('bots', 
+    bot_token=API_KEY,  # API_KEY _ TOKN
+    api_id=12345678,      # API_ID TELEGRMA ACCONET
+    api_hash='95f5f60488u996e33a34f297c734d048'    # API_HAHS TELEGRMA ACCONET
+)
+
+def JOIN_CHANNL(channl_username: str, ) : 
+    return types.InlineKeyboardMarkup([
+        [types.InlineKeyboardButton(' ⤷ CHECK ', callback_data='CHECK_JOIN'),types.InlineKeyboardButton(' ⤷ CH ', url=f't.me/{channl_username}')]])
+
+Message_Bot = {'JOIN_CHANNL':
+                u"عذرن عزيزي انت لست مشترك في قناة البوت 🧩💬."
+                u"\n\n • يجب عليك الاشترك في قناة البوت لي تتمكن من استخدام البوت  ✅💭. "
+                u"\n CH → @{}    "
+                u"\n\n ⤷ 𝗕𝗬 @X_Y1I - @X_YI1I . 💭"
+                u"      ",}
+
+async def CHECK_USER_JOIN(channls_join: list, user_id : int):
+    c ,r = None ,False
+    statues = ['administrator','creator','member','restricted']
+    for channl in channls_join:
+        url =f"https://api.telegram.org/bot{API_KEY}/getChatMember?chat_id=@{channl}&user_id={str(user_id)}"
+        respons = requests.get(url)
+        JSObj = json.loads(respons.text) 
+        user_state = JSObj['result']['status']
+        if user_state in statues:r = True 
+        else : 
+            r = False
+            c = channl
+            return r,c
+    return r,c
+
+
+Channls = ['X_YI1I', 'Y_O_OQ']
+
+@app.on_message(filters.regex('^/start$') & filters.private)
+async def START_BOT(_, Message: types.Message):
+    chat_id, message_id, user_id = Message.chat.id, Message.id, Message.from_user.id
+    CHECK, Channl= await CHECK_USER_JOIN(Channls, user_id)
+    if not CHECK:
+        await app.send_message(chat_id=chat_id, text=Message_Bot['JOIN_CHANNL'].format(Channl), reply_markup=JOIN_CHANNL(Channl))
+        return 
+    await app.send_message(chat_id=chat_id, text='Hey, Broo .')
+    
+
+@app.on_callback_query(filters.regex('^CHECK_JOIN$'))
+async def  CHECK_JOIN(_, query: types.CallbackQuery):
+    CHECK, Channl= await CHECK_USER_JOIN(Channls, query.from_user.id)
+    if not CHECK:
+        await app.answer_callback_query(query.id, 'Be sure to subscribe to my channel first .', show_alert=True)
+        return 
+    await app.edit_message_text(chat_id=query.message.chat.id, text='Hey, IS Bots .', message_id=query.message.id)
+
+
+asyncio.run(app.run())
